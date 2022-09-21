@@ -4,16 +4,16 @@ import { handleHttpError, handleResponse } from "../utils/handleError";
 
 export const checkAuthToken = async(req:Request,res:Response,next:NextFunction)=>{
     try{
-        if(!req.headers.authorization){
-            return handleResponse(res,"NOT_AUTHORIZED",409);
+
+        if(req.headers.authorization)
+        {
+            const token = req.headers.authorization.split(" ").pop();
+            const tokenData = verifyToken(token);
+            if(tokenData){
+                next();
+            }
         }
-        const token = req.headers.authorization.split(" ").pop();
-        const tokenData = verifyToken(token);
-        if(tokenData){
-            next();
-        }else{
-            handleResponse(res,"NOT_AUTHORIZED",409);
-        }
+        return handleResponse(res,"NOT_AUTHORIZED",409);
     }catch(e){
         handleHttpError(res,e);
     }
