@@ -1,9 +1,14 @@
 export class Role {
-  id: number | undefined;
+  private id: number | undefined;
   name: string;
-
-  constructor(payload:{id?:number;name:string}) {
-    this.id = payload.id;
-    this.name = payload.name;
+  constructor(name:string,id?:number) {
+    this.name = name;
+    this.id = id;
   }
+  getId():number | null{
+    if(this.id){
+      return this.id;
+    }
+    return null;
+  } 
 }

@@ -7,7 +7,17 @@ import { prisma } from "./prisma";
 
 
 export class UserRepository implements IUserRepository {
-  
+
+  async searchBYEmail(email: string): Promise<User | null> {
+    const userRead = await prisma.user.findFirst({
+      where: { email },
+    });
+    if (userRead) {
+      const user = new User(userRead.email,userRead.password,userRead.id);
+      return user;
+    }
+    return null;
+  }
   async updateRolesByUser(id: number, roles: number[]): Promise<User | null> {
     const rolesId = roles.map((id: RoleId) => ({ id }));
     const userUpdate = await prisma.user.update({
@@ -18,30 +28,19 @@ export class UserRepository implements IUserRepository {
         },
       },
     });
-    const user = new User({ ...userUpdate });
+    const user = new User(userUpdate.email,userUpdate.password);
     return user;
-  }
-  async searchBYEmail(email: string): Promise<User | null> {
-    const userRead = await prisma.user.findFirst({
-      where: { email },
-    });
-    if (userRead) {
-      const user = new User({ ...userRead });
-      return user;
-    }
-    return null;
   }
   async create(item: User): Promise<User | null> {
-    const userCreated = await 
-     prisma.user.create({
-        data: {
-          email: item.email,
-          password: item.password,
-        },
-      });
-    const user = new User({ ...userCreated });
-    return user;
- 
+      const userCreated = await 
+      prisma.user.create({
+         data: {
+           email: item.email,
+           password: item.password,
+         },
+       });
+     const user = new User(userCreated.email,userCreated.password);
+     return user;
   }
 
   async readById(id: UserId): Promise<User | null> {
@@ -49,7 +48,7 @@ export class UserRepository implements IUserRepository {
       where: { id },
     });
     if (userRead) {
-      const user = new User({ ...userRead });
+      const user = new User(userRead.email,userRead.password);
       return user;
     }
     return null;
@@ -57,7 +56,7 @@ export class UserRepository implements IUserRepository {
 
   async read(): Promise<User[] | null> {
     const users = await prisma.user.findMany();
-    return users.map((user) => new User({ ...user }));
+    return users.map((user) => new User(user.email,user.password));
   }
 
   async update(id: UserId, item: User): Promise<User | null> {
@@ -68,7 +67,7 @@ export class UserRepository implements IUserRepository {
         password: item.password,
       },
     });
-    const user = new User({ ...userUpdate });
+    const user = new User(userUpdate.email,userUpdate.password);
     return user;
   }
 
@@ -76,41 +75,8 @@ export class UserRepository implements IUserRepository {
     const userDelete = await prisma.user.delete({
       where: { id },
     });
-    const user = new User({ ...userDelete });
+    const user = new User(userDelete.email,userDelete.password);
     return user;
   }
 
-  async createWithRolesId(item: User, roles: RoleId[]): Promise<User | null> {
-    const usar = roles.map((id: RoleId) => ({ id }));
-    const userWithRoles = await prisma.user.create({
-      data: {
-        email: item.email,
-        password: item.password,
-        roles: {
-          connect: usar,
-        },
-      },
-    });
-    const user = new User({ ...userWithRoles });
-    return user;
-  }
-  async readWithRoles(id: UserId): Promise<{ user: User; roles: Role[] }> {
-    const userWithRoles = await prisma.user.findFirst({
-      where: {
-        id,
-      },
-      include: {
-        roles: true,
-      },
-    });
-    const roles: Role[] = userWithRoles?.roles || [];
-    const user: User = new User({
-      email: userWithRoles?.email || "",
-      password: userWithRoles?.password || "",
-    });
-    return {
-      user,
-      roles,
-    };
-  }
 }

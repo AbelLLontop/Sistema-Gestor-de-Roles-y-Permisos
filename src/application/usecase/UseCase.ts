@@ -1,4 +1,4 @@
-import { IDAOFactory } from "../../domain/services/IDaoFactory";
+import { IDAOFactory } from "../services/IDaoFactory";
 import { HandleResponse } from "../Response/HandleResponse";
 
 export abstract class UseCase {

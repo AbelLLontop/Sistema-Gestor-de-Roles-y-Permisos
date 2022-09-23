@@ -12,6 +12,7 @@ export class AuthController {
       const {status,data} = await registerNewUserUseCase.exect(email,password);
       handleResponse(res,data,status);
     }catch(e){
+      console.log(e);
       handleHttpError(res,e);
     }
   }

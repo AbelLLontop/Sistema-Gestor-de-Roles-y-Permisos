@@ -8,8 +8,8 @@ import { tokenSign } from '../../services/Token';
 
 export class LoginUserUseCase extends UseCase{
     public async exect(email:string,password:string): Promise<HandleResponse> {
-        const seatchUserByEmailUseCase = new SearchUserByEmailUseCase(this.daoFactory);
-        const checkIsExist = await seatchUserByEmailUseCase.exect(email);
+        const readUserWithRolesByEmailUseCase = new SearchUserByEmailUseCase(this.daoFactory);
+        const checkIsExist = await readUserWithRolesByEmailUseCase.exect(email);
         const user:User = checkIsExist.data;
         if(!user){
             return HandleErrorResponse("USER_NOT_EXIST",404);

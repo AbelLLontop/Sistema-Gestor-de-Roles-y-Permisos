@@ -21,11 +21,4 @@ model Rol {
   id           Int          @id @default(autoincrement())
   name         String       @unique
   users        User[]
-  persmissions Permission[]
-}
-
-model Permission {
-  id    Int    @id @default(autoincrement())
-  name  String @unique
-  roles Rol[]
 }

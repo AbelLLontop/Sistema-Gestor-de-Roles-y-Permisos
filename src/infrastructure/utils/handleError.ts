@@ -1,10 +1,9 @@
 import { Response } from "express";
 
 export const handleHttpError = (res:Response,error:any)=>{
-  console.log(error);
   console.log("Ocurrio un Error, posiblmente en la bd")
   res.status(500);
-  res.send({error:error});
+  res.send({error});
 }
 
 export const handleResponse = (res:Response,message:any,code=401)=>{

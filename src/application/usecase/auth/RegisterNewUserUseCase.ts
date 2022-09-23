@@ -10,14 +10,13 @@ export class RegisterNewUserUseCase extends UseCase{
     public async exect(email:string,password:string): Promise<HandleResponse> {
         const searchUserByEmailUseCase =new SearchUserByEmailUseCase(this.daoFactory);
         const checkIsExist = await searchUserByEmailUseCase.exect(email);
-  
         if(checkIsExist.data){
-          return HandleErrorResponse("USER_EXIST",401);
-           
+          return HandleErrorResponse("USER_EXIST",401);  
         }
         const passwordEncrypt = await encrypt(password);
         const registerUserUseCase = new CreateUserUseCase(this.daoFactory);
-        const newUser = new User({email,password:passwordEncrypt});
+       
+        const newUser = new User(email,passwordEncrypt);
         const responseUserCreate = await registerUserUseCase.exect(newUser);
         return responseUserCreate;
     }

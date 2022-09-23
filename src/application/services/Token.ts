@@ -1,8 +1,12 @@
+import { User } from './../../domain/auth/user/User';
 import jwt from 'jsonwebtoken';
-export const tokenSign = (user:any)=>{
+
+
+
+export const tokenSign = (data:User)=>{
     console.log(process.env.JWT_SECRET);
     return jwt.sign({
-        user,
+        id:data.getId(),
     },
     // @ts-ignore
     process.env.JWT_SECRET,
@@ -11,7 +15,7 @@ export const tokenSign = (user:any)=>{
     });
 }
 
-export const verifyToken= (token:string|undefined)=>{
+export const verifyToken= (token:string|undefined):any|null=>{
     try{
         // @ts-ignore
         return jwt.verify(token,process.env.JWT_SECRET);
